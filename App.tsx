@@ -61,7 +61,7 @@ const AppContent: React.FC<{
   useEffect(() => {
     if ('mediaSession' in navigator) {
       navigator.mediaSession.metadata = new MediaMetadata({
-        title: 'Arena MultiGame Pro',
+        title: 'MultiGame Hub Radio',
         artist: 'Sua Música Play',
         artwork: [{ src: 'https://cdn-icons-png.flaticon.com/512/3844/3844724.png', sizes: '512x512', type: 'image/png' }]
       });
@@ -77,7 +77,6 @@ const AppContent: React.FC<{
     <div className={`min-h-[100svh] transition-colors duration-300 ${themeClasses} flex flex-col font-sans relative overflow-x-hidden`}>
       <ScrollToTop />
       
-      {/* Wake Lock Audio - Mantém o áudio tocando no background do mobile */}
       <audio ref={silentAudioRef} loop preload="auto" className="hidden">
         <source src="data:audio/wav;base64,UklGRiQAAABXQVZFZm10IBAAAAABAAEAQB8AAEAfAAABAAgAZGF0YQAAAAA=" type="audio/wav" />
       </audio>
@@ -88,41 +87,35 @@ const AppContent: React.FC<{
         .music-drawer {
           transition: transform 0.6s cubic-bezier(0.16, 1, 0.3, 1), height 0.4s ease;
           height: ${isPlayerMaximized ? '92svh' : '450px'};
-          transform: translateY(${isPlayerOpen ? '0' : '-110%'});
+          transform: translateY(${isPlayerOpen ? '0' : '-115%'});
         }
         @media (max-width: 640px) {
-           .music-drawer { height: ${isPlayerMaximized ? '94svh' : '380px'}; }
+           .music-drawer { height: ${isPlayerMaximized ? '94svh' : '400px'}; }
         }
       `}</style>
 
-      {/* PLAYER GLOBAL PERSISTENTE - Nunca desmonta para não parar a música */}
+      {/* PLAYER GLOBAL PERSISTENTE - Sempre no DOM para não recarregar */}
       <div className={`fixed top-[64px] left-0 w-full z-40 music-drawer shadow-[0_30px_60px_-15px_rgba(0,0,0,0.5)] ${theme === 'dark' ? 'bg-black' : 'bg-white'} overflow-hidden border-b border-orange-600/30`}>
          <div className="h-full flex flex-col">
-            <div className="flex justify-between items-center p-3 bg-orange-600/10 backdrop-blur-sm">
+            <div className="flex justify-between items-center p-3 bg-orange-600/10">
                 <div className="flex items-center gap-2">
                    <div className="w-2 h-2 bg-green-500 rounded-full animate-pulse"></div>
-                   <span className="text-[10px] font-black uppercase tracking-widest opacity-70">Rádio Sua Música</span>
+                   <span className="text-[10px] font-black uppercase tracking-widest opacity-70">Rádio Ao Vivo</span>
                 </div>
                 <div className="flex items-center gap-2">
                    <button onClick={() => setIsPlayerMaximized(!isPlayerMaximized)} className="p-2 bg-zinc-500/10 rounded-lg flex items-center gap-2 hover:bg-orange-600 hover:text-white transition-all">
                      {isPlayerMaximized ? <Shrink size={16} /> : <Expand size={16} />}
-                     <span className="text-[9px] font-black uppercase hidden sm:inline">{isPlayerMaximized ? 'Reduzir Player' : 'Ampliar Player'}</span>
+                     <span className="text-[9px] font-black uppercase hidden sm:inline">{isPlayerMaximized ? 'Reduzir' : 'Ampliar'}</span>
                    </button>
                    <button onClick={() => setIsPlayerOpen(false)} className="p-2 bg-zinc-500/10 rounded-lg font-black text-[9px] uppercase hover:bg-red-600 hover:text-white transition-all px-4">Fechar</button>
                 </div>
             </div>
             <div className="flex-1 bg-black">
-               <iframe 
-                 src={currentMusicUrl} 
-                 className="w-full h-full border-none" 
-                 title="Global Audio Stream" 
-                 allow="autoplay; encrypted-media" 
-               />
+               <iframe src={currentMusicUrl} className="w-full h-full border-none" title="Musica" allow="autoplay; encrypted-media" />
             </div>
          </div>
       </div>
 
-      {/* Navegação Principal */}
       <nav className={`sticky top-0 z-50 h-[64px] px-2 sm:px-4 flex justify-between items-center backdrop-blur-md shadow-xl border-b ${theme === 'dark' ? 'border-white/5' : 'border-black/5'} ${navColor}`}>
         <Link to="/" onMouseDown={ripple} onClick={() => { sounds.playMove(); setIsPlayerOpen(false); }} className="flex items-center gap-2 sm:gap-3 text-lg font-black tracking-tighter uppercase group">
           <div className="p-1.5 bg-gradient-to-br from-blue-500 to-indigo-600 rounded-lg shadow-lg group-hover:scale-110 transition-transform">
@@ -132,36 +125,26 @@ const AppContent: React.FC<{
         </Link>
         
         <div className="flex items-center gap-1 sm:gap-2">
-          {/* BOTÃO DA RÁDIO */}
           <button onMouseDown={ripple} onClick={() => { sounds.playDice(); setIsPlayerOpen(!isPlayerOpen); silentAudioRef.current?.play().catch(()=>{}); }} className={`px-3 py-2 rounded-xl transition-all flex items-center gap-2 ${isPlayerOpen ? 'bg-orange-600 text-white shadow-lg' : 'bg-zinc-500/10'}`}>
             <Music size={16} className={isPlayerOpen ? 'animate-bounce' : ''} />
-            <span className="hidden sm:inline text-[10px] font-black uppercase italic tracking-wider">SOM</span>
+            <span className="hidden sm:inline text-[10px] font-black uppercase italic tracking-wider">MÚSICA</span>
             {isPlayerOpen ? <ChevronUp size={14} /> : <ChevronDown size={14} />}
           </button>
 
-          {/* BUSCA DE MÚSICA */}
           <Link to="/music" onMouseDown={ripple} onClick={() => { sounds.playMove(); setIsPlayerOpen(false); }} className={`p-2.5 rounded-xl transition-all ${location.pathname === '/music' ? 'bg-blue-600 text-white shadow-lg' : 'bg-zinc-500/10'}`}>
             <Search size={16} />
           </Link>
 
-          {/* MODO TELA CHEIA */}
           <button onMouseDown={ripple} onClick={toggleFullscreen} className={`p-2.5 rounded-xl transition-all ${isFullscreen ? 'bg-blue-600 text-white shadow-lg' : 'bg-zinc-500/10 text-blue-500'}`}>
             {isFullscreen ? <Minimize size={16} /> : <Maximize size={16} />}
           </button>
 
-          {/* MUTE DE EFEITOS */}
-          <button onMouseDown={ripple} onClick={toggleMute} className={`p-2.5 rounded-xl transition-all ${isMuted ? 'bg-zinc-500/10 text-zinc-400' : 'bg-blue-600 text-white shadow-lg'}`}>
-            {isMuted ? <VolumeX size={16} /> : <Volume2 size={16} />}
-          </button>
-
-          {/* ALTERNAR TEMA */}
           <button onMouseDown={ripple} onClick={toggleTheme} className={`p-2.5 rounded-xl transition-all ${theme === 'dark' ? 'bg-yellow-500 text-black shadow-lg' : 'bg-slate-800 text-white shadow-lg'}`}>
             {theme === 'light' ? <Moon size={16} /> : <Sun size={16} />}
           </button>
         </div>
       </nav>
 
-      {/* Conteúdo Principal com efeito de profundidade quando o player abre */}
       <main className={`flex-1 container mx-auto px-2 sm:px-4 py-4 sm:py-8 relative z-10 transition-all duration-700 ${isPlayerOpen ? 'opacity-20 blur-xl pointer-events-none scale-95' : 'opacity-100 blur-0 scale-100'}`}>
         <Routes>
           <Route path="/" element={<LandingPage theme={theme} />} />
@@ -177,14 +160,7 @@ const AppContent: React.FC<{
         </Routes>
       </main>
 
-      <footer className={`p-6 text-center border-t backdrop-blur-sm ${theme === 'dark' ? 'border-white/5 bg-black/20' : 'border-black/5 bg-white/20'}`}>
-        <div className="flex justify-center gap-4 mb-4 opacity-40">
-           <div className="w-1.5 h-1.5 bg-blue-500 rounded-full"></div>
-           <div className="w-1.5 h-1.5 bg-indigo-500 rounded-full"></div>
-           <div className="w-1.5 h-1.5 bg-purple-500 rounded-full"></div>
-        </div>
-        <p className="opacity-30 text-[8px] font-black uppercase tracking-[0.4em]">Arena Gamer Pro • Background Music Engine Active</p>
-      </footer>
+      <footer className="p-6 text-center opacity-30 text-[8px] font-black uppercase tracking-[0.4em]">MultiGame Hub Premium • 2024</footer>
     </div>
   );
 };
@@ -217,14 +193,7 @@ const App: React.FC = () => {
 
   return (
     <Router>
-      <AppContent 
-        theme={theme} 
-        toggleTheme={toggleTheme} 
-        isMuted={isMuted} 
-        toggleMute={toggleMute} 
-        isFullscreen={isFullscreen} 
-        toggleFullscreen={toggleFullscreen} 
-      />
+      <AppContent theme={theme} toggleTheme={toggleTheme} isMuted={isMuted} toggleMute={toggleMute} isFullscreen={isFullscreen} toggleFullscreen={toggleFullscreen} />
     </Router>
   );
 };

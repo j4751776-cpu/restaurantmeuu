@@ -12,7 +12,8 @@ const SlidingPuzzle: React.FC<{ theme: Theme }> = ({ theme }) => {
   const [tiles, setTiles] = useState<number[]>(generateTiles());
   const [won, setWon] = useState(false);
 
-  const shuffle = (event: React.MouseEvent) => {
+  // Fix: Explicitly type MouseEvent to HTMLElement for compatibility with useRipple
+  const shuffle = (event: React.MouseEvent<HTMLElement>) => {
     ripple(event);
     const shuffled = [...generateTiles()].sort(() => Math.random() - 0.5);
     setTiles(shuffled);
@@ -20,7 +21,8 @@ const SlidingPuzzle: React.FC<{ theme: Theme }> = ({ theme }) => {
     sounds.playDice();
   };
 
-  const moveTile = (event: React.MouseEvent, index: number) => {
+  // Fix: Explicitly type MouseEvent to HTMLElement for compatibility with useRipple
+  const moveTile = (event: React.MouseEvent<HTMLElement>, index: number) => {
     ripple(event);
     const emptyIdx = tiles.indexOf(0);
     const isAdjacent = Math.abs(Math.floor(index/3) - Math.floor(emptyIdx/3)) + Math.abs(index%3 - emptyIdx%3) === 1;

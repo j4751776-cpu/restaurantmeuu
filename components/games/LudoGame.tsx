@@ -20,7 +20,8 @@ const LudoGame: React.FC<{ theme: Theme }> = ({ theme }) => {
     <Dice4 size={64} />, <Dice5 size={64} />, <Dice6 size={64} />
   ];
 
-  const rollDice = (event: React.MouseEvent) => {
+  // Fix: Explicitly type MouseEvent to HTMLElement
+  const rollDice = (event: React.MouseEvent<HTMLElement>) => {
     ripple(event);
     if (isRolling || winner) return;
     setIsRolling(true);

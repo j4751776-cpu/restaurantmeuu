@@ -37,7 +37,8 @@ const UnoGame: React.FC<{ theme: Theme }> = ({ theme }) => {
   const [gameStarted, setGameStarted] = useState(false);
   const [winner, setWinner] = useState<1 | 2 | null>(null);
 
-  const startNewGame = (event?: React.MouseEvent) => {
+  // Fix: Use React.MouseEvent<HTMLElement> to prevent generic Element type mismatch
+  const startNewGame = (event?: React.MouseEvent<HTMLElement>) => {
     if (event) ripple(event);
     const newDeck = createDeck();
     const p1 = newDeck.splice(0, 7);
@@ -53,7 +54,8 @@ const UnoGame: React.FC<{ theme: Theme }> = ({ theme }) => {
     sounds.playDice();
   };
 
-  const playCard = (event: React.MouseEvent, player: 1 | 2, cardIndex: number) => {
+  // Fix: Use React.MouseEvent<HTMLElement> to prevent generic Element type mismatch
+  const playCard = (event: React.MouseEvent<HTMLElement>, player: 1 | 2, cardIndex: number) => {
     ripple(event);
     if (player !== currentPlayer) return;
     const hand = player === 1 ? p1Hand : p2Hand;
@@ -77,7 +79,8 @@ const UnoGame: React.FC<{ theme: Theme }> = ({ theme }) => {
     }
   };
 
-  const drawCard = (event: React.MouseEvent) => {
+  // Fix: Use React.MouseEvent<HTMLElement> to prevent generic Element type mismatch
+  const drawCard = (event: React.MouseEvent<HTMLElement>) => {
     ripple(event);
     if (deck.length === 0) return;
     const newDeck = [...deck];

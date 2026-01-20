@@ -55,7 +55,8 @@ const MazeGame: React.FC<{ theme: Theme }> = ({ theme }) => {
     }
   };
 
-  const handleControl = (event: React.MouseEvent, dx: number, dy: number) => {
+  // Fix: Explicitly type MouseEvent to HTMLElement
+  const handleControl = (event: React.MouseEvent<HTMLElement>, dx: number, dy: number) => {
     ripple(event);
     move(dx, dy);
   };
